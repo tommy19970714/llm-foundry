@@ -289,6 +289,23 @@ def dolly_preprocessing_function(inp: Dict):
     return {'prompt': prompt, 'response': response}
 
 
+@dataset_constructor.register('kunishou/databricks-dolly-15k-ja')
+def dolly_preprocessing_function(inp: Dict):
+    """Format the text string."""
+    PROMPT_FORMAT = 'Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Response:\n'
+    try:
+        if inp['input'] != '':
+            instruction = inp['instruction'] + '\n' + inp['input']
+        else:
+            instruction = inp['instruction']
+        prompt = PROMPT_FORMAT.format(instruction=instruction)
+        response = inp['output']
+    except Exception as e:
+        raise ValueError(
+            f'Unable to extract prompt/response from {inp=}') from e
+    return {'prompt': prompt, 'response': response}
+
+
 @dataset_constructor.register('bigscience/P3')
 def p3_preprocessing_function(inp: Dict):
     """Format the already-split example."""
