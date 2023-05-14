@@ -25,7 +25,7 @@ tokenizer:
 train_loader:
   name: finetuning
   dataset:
-    name: kunishou/databricks-dolly-15k-ja
+    hf_name: kunishou/databricks-dolly-15k-ja
     split: train
     tokenizer_name: ${tokenizer_name}
     max_seq_length: ${max_seq_len}
