@@ -43,6 +43,25 @@ train_loader:
   persistent_workers: true
   timeout: 0
 
+eval_loader:
+  name: finetuning
+  dataset:
+    hf_name: tommy19970714/alpaca_ja
+    split: train
+    tokenizer_name: ${tokenizer_name}
+    max_seq_len: ${max_seq_len}
+    allow_pad_trimming: false
+    decoder_only_format: true
+    # packing_ratio:
+    shuffle: true
+  drop_last: true
+  num_workers: 8
+  pin_memory: false
+  prefetch_factor: 2
+  persistent_workers: true
+  timeout: 0
+
+
 # Optimization
 scheduler:
   name: linear_decay_with_warmup  # linear no warmup is HF default which dolly used
