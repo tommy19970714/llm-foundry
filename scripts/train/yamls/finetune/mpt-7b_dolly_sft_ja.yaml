@@ -44,23 +44,23 @@ train_loader:
   persistent_workers: true
   timeout: 0
 
-eval_loader:
-  name: finetuning
-  dataset:
-    hf_name: tommy19970714/alpaca_ja
-    split: train
-    tokenizer_name: ${tokenizer_name}
-    max_seq_len: ${max_seq_len}
-    allow_pad_trimming: false
-    decoder_only_format: true
-    # packing_ratio:
-    shuffle: true
-  drop_last: true
-  num_workers: 8
-  pin_memory: false
-  prefetch_factor: 2
-  persistent_workers: true
-  timeout: 0
+# eval_loader:
+#   name: finetuning
+#   dataset:
+#     hf_name: tommy19970714/alpaca_ja
+#     split: train
+#     tokenizer_name: ${tokenizer_name}
+#     max_seq_len: ${max_seq_len}
+#     allow_pad_trimming: false
+#     decoder_only_format: true
+#     # packing_ratio:
+#     shuffle: true
+#   drop_last: true
+#   num_workers: 8
+#   pin_memory: false
+#   prefetch_factor: 2
+#   persistent_workers: true
+#   timeout: 0
 
 
 # Optimization
@@ -87,7 +87,7 @@ algorithms:
 max_duration: 3ep  # 2-3 epochs seems like the sweet spot
 eval_interval: 1 # this is the only allowed value for no eval
 # eval_subset_num_batches: -1
-eval_first: true
+# eval_first: true
 global_train_batch_size: 48  # somewhere in the 6-8 * numgpus range seems good
 
 # System
