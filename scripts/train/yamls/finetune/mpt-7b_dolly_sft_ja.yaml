@@ -1,5 +1,6 @@
 max_seq_len: 2048
 global_seed: 17
+tokenizer_name: mosaicml/mpt-7b
 
 # Run Name
 run_name: dolly15j # If left blank, will be read from env var $COMPOSER_RUN_NAME
@@ -16,7 +17,7 @@ model:
 
 # Tokenizer
 tokenizer:
-  name: mosaicml/mpt-7b
+  name: ${tokenizer_name}
   kwargs:
     model_max_length: ${max_seq_len}
 
