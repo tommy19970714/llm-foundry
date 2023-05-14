@@ -85,7 +85,7 @@ algorithms:
     clipping_threshold: 1.0
 
 max_duration: 3ep  # 2-3 epochs seems like the sweet spot
-eval_interval: 1ep # this is the only allowed value for no eval
+eval_interval: 1 # this is the only allowed value for no eval
 # eval_subset_num_batches: -1
 eval_first: true
 global_train_batch_size: 48  # somewhere in the 6-8 * numgpus range seems good
