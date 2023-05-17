@@ -5,22 +5,21 @@ tokenizer_name: cyberagent/open-calm-7b
 # Run Name
 run_name: dolly15j # If left blank, will be read from env var $COMPOSER_RUN_NAME
 
+# Model
 model:
   name: hf_causal_lm
   pretrained: true
   pretrained_model_name_or_path: cyberagent/open-calm-7b
   config_overrides:
-    attn_config:
-      attn_impl: triton
-      # Set this to `true` if using `train_loader.dataset.packing_ratio` below
-      attn_uses_sequence_id: false
+    # WARNING: if setting `pretrained: true`, `max_position_embeddings` must match the
+    # `max_position_embeddings` used during pre-training
+    max_position_embeddings: ${max_seq_len}
 
 # Tokenizer
 tokenizer:
   name: ${tokenizer_name}
   kwargs:
     model_max_length: ${max_seq_len}
-
 
 # Dataloaders
 train_loader:
@@ -62,27 +61,26 @@ train_loader:
 #   persistent_workers: true
 #   timeout: 0
 
-
 # Optimization
 scheduler:
-  name: linear_decay_with_warmup  # linear no warmup is HF default which dolly used
-  t_warmup: 0ba
-  alpha_f: 0
+  name: cosine_with_warmup
+  t_warmup: 100ba
+  alpha_f: 0.1
 
 optimizer:
-  # Based on Dolly
   name: decoupled_adamw
-  lr: 1.0e-5
+  lr: 6.0e-4
   betas:
   - 0.9
-  - 0.999
-  eps: 1.0e-8
-  weight_decay: 0
+  - 0.95
+  eps: 1.0e-08
+  weight_decay: 0.0
 
 algorithms:
   gradient_clipping:
     clipping_type: norm
     clipping_threshold: 1.0
+
 
 max_duration: 3ep  # 2-3 epochs seems like the sweet spot
 eval_interval: 1 # this is the only allowed value for no eval
@@ -92,8 +90,8 @@ global_train_batch_size: 48  # somewhere in the 6-8 * numgpus range seems good
 
 # System
 seed: ${global_seed}
-device_eval_batch_size: 8
-device_train_microbatch_size: 8
+device_eval_batch_size: 4
+device_train_microbatch_size: 4
 # device_train_microbatch_size: auto
 precision: amp_bf16
 
@@ -101,7 +99,7 @@ precision: amp_bf16
 fsdp_config:
   sharding_strategy: FULL_SHARD
   mixed_precision: PURE
-  activation_checkpointing: true
+  activation_checkpointing: false
   activation_checkpointing_reentrant: false
   activation_cpu_offload: false
   limit_all_gathers: true
@@ -127,3 +125,7 @@ save_interval: 200ba
 # save_num_checkpoints_to_keep: 1  # Important, this cleans up checkpoints saved to DISK
 save_folder: /home/mosaicml/{run_name}/checkpoints
 # save_folder: s3://my-bucket/my-folder/{run_name}/checkpoints
+
+# Load from local filesystem or remote object store
+# load_path: ./gpt-125m/checkpoints/latest-rank{rank}.pt
+# load_path: s3://my-bucket/my-folder/gpt-125m/checkpoints/latest-rank{rank}.pt
