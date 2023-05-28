@@ -27,7 +27,6 @@ train_loader:
   dataset:
     hf_name: kunishou/databricks-dolly-15k-ja
     split: train
-    tokenizer_name: ${tokenizer_name}
     max_seq_len: ${max_seq_len}
     allow_pad_trimming: false
     decoder_only_format: true
